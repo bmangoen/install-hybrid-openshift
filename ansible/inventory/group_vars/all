@@ -1,0 +1,10 @@
+---
+worker_server_profile_template: "OpenShift Worker V2"
+server_profile_template: "{{ worker_server_profile_template }}"
+## ocp
+
+## oneview vars
+oneview_auth:
+  ip: "10.6.25.10"
+  username: "ITAdmin"
+  api_version: 1000

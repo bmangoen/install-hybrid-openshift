@@ -1,0 +1,4 @@
+---
+- include: facts.yaml
+- include: poweroff.yaml
+- include: profiles.yaml

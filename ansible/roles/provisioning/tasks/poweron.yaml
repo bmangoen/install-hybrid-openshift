@@ -1,0 +1,23 @@
+---
+- name: power on server
+  oneview_server_hardware:
+    state: power_state_set
+    data:
+      name: "{{ hardware_name }}"
+      powerStateData:
+        powerState: "On"
+        powerControl: "MomentaryPress"
+  delegate_to: localhost
+- debug:
+    var: output
+    verbosity: 2
+
+#- pause:
+#    minutes: 7
+- name: wait for server to become available
+  local_action: wait_for port=22 host='{{ ansible_host }}' delay=30 timeout=3600
+  tags:
+  - poweron
+
+- name: ping
+  ping:

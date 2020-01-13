@@ -1,0 +1,47 @@
+---
+- name: create a service profile and assign it to a node (preassigned)
+  oneview_server_profile:
+    state: present
+    data:
+      serverProfileTemplateName: "{{ server_profile_template }}"
+      name: "{{ inventory_hostname.split('.').0 }}"
+      affinity: "Bay"
+      description: "{{ inventory_hostname.split('.').0 }} with {{ server_profile_template }}"
+      serverHardwareUri: "{{ hardware_uri }}"
+#      osDeploymentSettings:
+#        osDeploymentPlanUri: "{{ os_deployment_plan_uri }}"
+#        osCustomAttributes: "{{ os_custom_attributes }}"
+  register: server_profile_create
+  delegate_to: localhost
+  when:
+  - preassigned
+
+- name: create a service profile and assign it to a node (random)
+  oneview_server_profile:
+    state: present
+    data:
+      serverProfileTemplateName: "{{ server_profile_template }}"
+      name: "{{ inventory_hostname.split('.').0 }}"
+      affinity: "Bay"
+      description: "{{ inventory_hostname.split('.').0 }} with {{ server_profile_template }}"
+#      osDeploymentSettings:
+#        osDeploymentPlanUri: "{{ os_deployment_plan_uri }}"
+#        osCustomAttributes: "{{ os_custom_attributes }}"
+  register: server_profile_create
+  delegate_to: localhost
+  when: not preassigned
+
+- name: set hardware name
+  set_fact:
+    hardware_name: "{{ item }}"
+  with_items:  "{{ hw|json_query(hardware_name_query) }}"
+  vars:
+    hardware_name_query:  "ansible_facts.server_hardwares[?uri=='{{  server_profile_create.ansible_facts.server_hardware.uri }}'].name"
+  when: not preassigned
+
+
+- debug:
+    var: server_profile_create
+    verbosity: 2
+  tags:
+  - templates
