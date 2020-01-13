@@ -72,3 +72,9 @@ https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environme
     cd ~
     cd oneview-ansible/
     ansible-playbook -i ../inventory/hosts nico_oneview_server_profile_facts.yml
+
+### deploy a new BM Servers
+udpate the inventory file (example):
+    ocp-node1.example.com ansible_ssh_user=root ansible_host=192.168.1.121 enclosure_name='FRM1-TOP: CN1234567A' enclosure_bay=2
+then start the playbook :
+    ansible-playbook -i hosts oneview-provisioning-servers.yaml
